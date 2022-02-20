@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="choose_button">Выбрать контакт</string>
+    <string name="show_button">Показать контакты</string>
+    <string name="show_sp_button">Показать из SP</string>
+    <string name="show_notification_button">Показать в Notification</string>
+    <string name="name">Name</string>
+    <string name="number">Number</string>
+    <string name="email">Email</string>
+</resources>

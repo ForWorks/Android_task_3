@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contacts"
+        android:layout_width="match_parent"
+        android:layout_height="315dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/chooseBtn"
+        android:text="@string/choose_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contacts"
+        style="@style/buttons" />
+
+    <Button
+        android:id="@+id/showBtn"
+        android:text="@string/show_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chooseBtn"
+        style="@style/buttons" />
+
+    <Button
+        android:id="@+id/showSPButton"
+        android:text="@string/show_sp_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showBtn"
+        style="@style/buttons" />
+
+    <Button
+        android:id="@+id/notificationBtn"
+        android:text="@string/show_notification_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showSPButton"
+        style="@style/buttons" />
+
+    <TextView
+        android:id="@+id/contactInfo"
+        style="@style/recycler_item_text"
+        android:textAlignment="viewStart"
+        app:layout_constraintStart_toStartOf="@+id/notificationBtn"
+        app:layout_constraintTop_toBottomOf="@+id/notificationBtn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
