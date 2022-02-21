@@ -21,8 +21,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-
-    private var contactsList: MutableList<Contact> = mutableListOf()
+    companion object {
+        private var contactsList: MutableList<Contact> = mutableListOf()
+        private var info: String? = null
+    }
     private lateinit var binding: ActivityMainBinding
     private lateinit var dialog: AlertDialog
     private lateinit var listView: ListView
@@ -42,8 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             controller.createNotificationChannel()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            controller.checkPermissions(Manifest.permission.READ_CONTACTS, this)
 
         init()
         setListeners()
@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Сохранение успешно", Toast.LENGTH_LONG).show()
         }
         binding.contacts.adapter = adapter
+        binding.contactInfo.text = info
     }
 
     private fun setListeners() {
@@ -82,14 +83,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.chooseBtn.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                val contacts = controller.getContacts()
-                runOnUiThread {
-                    contactsList.clear()
-                    contactsList.addAll(contacts)
-                    adapter.notifyDataSetChanged()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if(controller.checkPermissions(Manifest.permission.READ_CONTACTS, this)) {
+                    fillRecycler()
                 }
-            }
+            } else
+                fillRecycler()
         }
 
         binding.showBtn.setOnClickListener {
@@ -106,7 +105,8 @@ class MainActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 val contacts = controller.getAllContacts()
                 runOnUiThread {
-                    binding.contactInfo.text = controller.getInfo(contacts[i])
+                    info = controller.getInfo(contacts[i])
+                    binding.contactInfo.text = info
                     controller.addPreferences(contacts[i].getNumber())
                     dialog.hide()
                 }
@@ -114,10 +114,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun fillRecycler() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val contacts = controller.getContacts()
+            runOnUiThread {
+                contactsList.clear()
+                contactsList.addAll(contacts)
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED && requestCode == Constants.PERMISSION_CODE)
-            finish()
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode == Constants.PERMISSION_CODE)
+            fillRecycler()
     }
 }
 
